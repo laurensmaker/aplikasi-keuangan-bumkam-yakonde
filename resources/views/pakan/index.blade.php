@@ -77,9 +77,9 @@
                                     <tr>
                                         <th>No</th>
                                         <th data-priority="1">Nama Pakan</th>
-                                        <th data-priority="3">Stok Awal</th>
-                                        <th data-priority="3">Stok Masuk</th>
-                                        <th data-priority="6">Harga Per Kg</th>
+                                        <th data-priority="3">Stok Awal (Kg)</th>
+                                        <th data-priority="3">Stok Masuk (Kg)</th>
+                                        <th data-priority="6">Harga Per (Kg)</th>
                                         <th data-priority="6">Tanggal Masuk</th>
                                         {{-- <th data-priority="6">Total Stok/Stok Akhir</th> --}}
                                         <th data-priority="6">Aksi</th>
@@ -90,9 +90,10 @@
                                         <tr data-pakan="{{ $item->nama_pakan }}">
                                             <th>{{ $index + 1 }}</th>
                                             <td>{{ $item->nama_pakan }}</td>
-                                            <td>{{ $item->stok_awal }}</td>
-                                            <td>{{ $item->stok_masuk }}</td>
-                                            <td>{{ $item->harga_per_kg }}</td>
+                                            <td>{{ number_format($item->stok_awal, 0, ',', '.') }}</td>
+                                            <td>{{ number_format($item->stok_masuk, 0, ',', '.') }}</td>
+                                            <td>{{ number_format($item->harga_per_kg, 0, ',', '.') }}</td>
+                                            {{-- <td>{{ $item->harga_per_kg }}</td> --}}
                                             <td>{{ \Carbon\Carbon::parse($item->tanggal_masuk)->format('d-m-Y') }}</td>
                                             {{-- <td><strong class="bg-warning p-2">{{ $item->stok_sisa }}</strong></td> --}}
                                             <td class="d-flex gap-2">

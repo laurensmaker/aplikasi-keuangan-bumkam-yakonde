@@ -20,7 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('pakan', PakanController::class);
     Route::resource('stok-keluar', StokKeluarController::class);
     Route::resource('pelanggan', PelangganController::class);
-    Route::get('/keuangan', [KeuanganController::class, 'keuangan'])->name('keuangan');
+    // Route::get('/keuangan', [KeuanganController::class, 'keuangan'])->name('keuangan');
+    Route::get('/keuangan', [KeuanganController::class, 'keuangan'])->name('keuangan.keuangan');
     Route::get('/laporan/{jenis}/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
 });
 

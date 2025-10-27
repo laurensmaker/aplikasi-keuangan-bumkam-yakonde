@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use PakanExport;
 use App\Models\Pakan;
 use App\Models\Produksi;
@@ -12,7 +13,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanController extends Controller
 {
-    public function cetak($jenis)
+    public function cetak($jenis, Request $request)
     {
         switch ($jenis) {
             case 'pakan':
@@ -34,21 +35,48 @@ class LaporanController extends Controller
                 break;
 
             case 'keuangan':
-                // Hitung pemasukan dan pengeluaran
-                $pemasukan = Pelanggan::sum('total_harga');   // total harga penjualan telur
-                $pengeluaran = Pakan::sum('total_harga');     // total harga stok masuk
-                $keuntungan = $pemasukan - $pengeluaran;
+                 $bulan = $request->get('bulan');
+            $tahun = $request->get('tahun');
 
-                // Siapkan data untuk view
-                $data = [
-                    'pemasukan' => $pemasukan,
-                    'pengeluaran' => $pengeluaran,
-                    'keuntungan' => $keuntungan,
-                ];
+            // Query dasar
+            $queryPemasukan = Pelanggan::query();
+            $queryPengeluaran = Pakan::query();
 
-                $view = 'laporan.keuangan_pdf';
-                $filename = 'laporan_keuangan.pdf';
-                break;
+            // Filter bulan dan tahun
+            if ($bulan && $tahun) {
+                $queryPemasukan->whereMonth('created_at', $bulan)
+                               ->whereYear('created_at', $tahun);
+                $queryPengeluaran->whereMonth('created_at', $bulan)
+                                 ->whereYear('created_at', $tahun);
+            } elseif ($tahun) {
+                $queryPemasukan->whereYear('created_at', $tahun);
+                $queryPengeluaran->whereYear('created_at', $tahun);
+            }
+
+            // Hitung total
+            $pemasukan = $queryPemasukan->sum('total_harga');
+            $pengeluaran = $queryPengeluaran->sum('total_harga');
+            $keuntungan = $pemasukan - $pengeluaran;
+
+            // Format nama file sesuai periode
+            $periode = "semua_periode";
+            if ($bulan && $tahun) {
+                $periode = strtolower(DateTime::createFromFormat('!m', $bulan)->format('F')) . '-' . $tahun;
+            } elseif ($tahun) {
+                $periode = 'tahun-' . $tahun;
+            }
+
+            // Siapkan data untuk view PDF
+            $data = [
+                'pemasukan' => $pemasukan,
+                'pengeluaran' => $pengeluaran,
+                'keuntungan' => $keuntungan,
+                'periode' => $periode,
+            ];
+
+            $view = 'laporan.keuangan_pdf';
+            $filename = "laporan_keuangan_{$periode}.pdf";
+            break;
 
             default:
                 return redirect()->back()->with('error', 'Jenis laporan tidak ditemukan.');

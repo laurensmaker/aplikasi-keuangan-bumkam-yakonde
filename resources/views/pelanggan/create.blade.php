@@ -59,7 +59,7 @@
                                         <select class="form-select" id="jenisSatuan" name="jenis_satuan" required>
                                             <option value="">-- Pilih Jenis Satuan --</option>
                                             <option value="kg">Per Kilogram (Kg)</option>
-                                            <option value="papan">Per Papan</option>
+                                            <option value="rak">Per Rak</option>
                                         </select>
                                         <label for="jenisSatuan">Jenis Satuan</label>
                                     </div>

@@ -58,7 +58,7 @@
                                                 <p class="text-muted mb-0" style="font-size: 11px">Jumlah Telur</p>
                                             </div>
                                             <div class="col-3">
-                                                <h5 class="font-size-13">{{ number_format($produksiTerbaru->pakan_digunakan, 2, ',', '.') }} <small>Kg</small></h5>
+                                                <h5 class="font-size-13">{{ number_format($produksiTerbaru->pakan_digunakan, 0, ',', '.') }} <small>Kg</small></h5>
                                                 <p class="text-muted mb-0" style="font-size: 11px">Pakan </p>
                                             </div>
                                         </div>                                        
@@ -135,7 +135,7 @@
                                         @if ($pakanTotal->isEmpty())
                                             <p>Stok Kosong</p>
                                         @else
-                                            <h4 class="mb-0">{{ number_format($pakanTerbaru->stok_sisa, 2, ',', '.') }} Kg</h4>
+                                            <h4 class="mb-0">{{ number_format($pakanTerbaru->stok_sisa, 0, ',', '.') }} Kg</h4>
                                             @if ($pakanTerbaru->stok_sisa > 50) 
                                                 <p class="fw-medium text-success">
                                                     <i class="mdi mdi-check-circle-outline"></i> Stok Aman

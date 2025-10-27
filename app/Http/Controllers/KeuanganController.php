@@ -8,15 +8,39 @@ use Illuminate\Http\Request;
 
 class KeuanganController extends Controller
 {
-    public function keuangan(){
-        $pemasukan = Pelanggan::sum('total_harga');   
-        $pengeluaran = Pakan::sum('total_harga');    
+    public function keuangan(Request $request){
+
+        $bulan = $request->get('bulan');
+        $tahun = $request->get('tahun');
+
+        // Query dasar
+        $queryPemasukan = Pelanggan::query();
+        $queryPengeluaran = Pakan::query();
+
+        // Filter berdasarkan bulan & tahun jika dipilih
+        if ($bulan && $tahun) {
+            $queryPemasukan->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun);
+            $queryPengeluaran->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun);
+        } elseif ($tahun) {
+            $queryPemasukan->whereYear('created_at', $tahun);
+            $queryPengeluaran->whereYear('created_at', $tahun);
+        }
+
+        // Hitung total
+        $pemasukan = $queryPemasukan->sum('total_harga');
+        $pengeluaran = $queryPengeluaran->sum('total_harga');
         $keuntungan = $pemasukan - $pengeluaran;
+
+
+
+        // $pemasukan = Pelanggan::sum('total_harga');   
+        // $pengeluaran = Pakan::sum('total_harga');    
+        // $keuntungan = $pemasukan - $pengeluaran;
 
         $pemasukanRp = number_format($pemasukan,0,',','.');
         $pengeluaranRp = number_format($pengeluaran,0,',','.');
         $keuntunganRp = number_format($keuntungan,0,',','.');
 
-        return view('keuangan.keuangan', compact('pemasukanRp', 'pengeluaranRp', 'keuntunganRp'));
+        return view('keuangan.keuangan', compact('pemasukanRp', 'pengeluaranRp', 'keuntunganRp', 'bulan', 'tahun'));
     }
 }

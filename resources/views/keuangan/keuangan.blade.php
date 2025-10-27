@@ -18,7 +18,7 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownDownload">
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('laporan.cetak', ['jenis' => 'keuangan']) }}">
+                                    <a class="dropdown-item" href="{{ route('laporan.cetak', ['jenis' => 'keuangan', 'bulan' => request('bulan'),  'tahun' => request('tahun')]) }}">
                                         <i class="bx bxs-file-pdf me-2 text-danger"></i> Download PDF
                                     </a>
                                 </li>
@@ -28,6 +28,39 @@
                                     </a>
                                 </li> --}}
                             </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form method="GET" action="{{ route('keuangan.keuangan') }}" class="row g-3 align-items-end">
+                                @csrf
+                                <div class="col-md-3">
+                                    <label for="bulan" class="form-label">Pilih Bulan</label>
+                                    <select name="bulan" id="bulan" class="form-control">
+                                        <option value="">-- Semua Bulan --</option>
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <option value="{{ $i }}" {{ request('bulan') == $i ? 'selected' : '' }}>
+                                                {{ DateTime::createFromFormat('!m', $i)->format('F') }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="tahun" class="form-label">Pilih Tahun</label>
+                                    <select name="tahun" id="tahun" class="form-control">
+                                        <option value="">-- Semua Tahun --</option>
+                                        @for ($t = 2023; $t <= now()->year; $t++)
+                                            <option value="{{ $t }}" {{ request('tahun') == $t ? 'selected' : '' }}>
+                                                {{ $t }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary btn-sm">Filter</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
 

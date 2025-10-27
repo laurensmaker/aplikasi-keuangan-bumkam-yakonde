@@ -83,10 +83,10 @@
                                                 <td>{{ $item->kandang->kandang }}</td>
                                                 <td>{{ $item->jumlah_ayam }}</td>
                                                 <td>{{ $item->jumlah_telur }}</td>
-                                                <td>{{ $item->berat_total }}</td>
+                                                <td>{{ number_format($item->berat_total, 0, ',', '.') }}</td>
                                                 <td>{{ $item->telur_bagus }}</td>
                                                 <td>{{ $item->telur_rusak }}</td>
-                                                <td>{{ $item->pakan_digunakan }}</td>
+                                                <td>{{ number_format($item->pakan_digunakan, 0, ',', '.') }}</td>
                                                 <td class="d-flex gap-2">
                                                 {{-- <a href="{{ route('produksi.edit', $item->id) }}" class="btn btn-success  waves-effect btn-label waves-light"><i class="bx bx-pencil label-icon"></i> Edit</a> --}}
                                                 <form action="{{ route('produksi.destroy', $item->id) }}" method="POST" class="d-inline form-hapus">

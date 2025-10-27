@@ -72,11 +72,13 @@
                                                 <td>{{ $item->alamat_pelanggan }}</td>
                                                 <td>{{ $item->no_hp_pelanggan }}</td>
                                                 <td>{{ $item->jenis_satuan }}</td>
-                                                <td>{{ $item->jumlah }}</td>
-                                                <td>{{ $item->harga_per_satuan }}</td>
-                                                <td>{{ $item->total_harga }}</td>
+                                                <td>{{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                                                <td>{{ number_format($item->harga_per_satuan, 0, ',', '.') }}</td>
+                                                <td>{{ number_format($item->total_harga, 0, ',', '.') }}</td>
+                                                {{-- <td>{{ $item->harga_per_satuan }}</td> --}}
+                                                {{-- <td>{{ $item->total_harga }}</td> --}}
                                                 <td class="d-flex gap-2">
-                                                <a href="{{ route('pelanggan.edit', $item->id) }}" class="btn btn-success  waves-effect btn-label waves-light"><i class="bx bx-pencil label-icon"></i> Edit</a>
+                                                {{-- <a href="{{ route('pelanggan.edit', $item->id) }}" class="btn btn-success  waves-effect btn-label waves-light"><i class="bx bx-pencil label-icon"></i> Edit</a> --}}
                                                 <form action="{{ route('pelanggan.destroy', $item->id) }}" method="POST" class="d-inline form-hapus">
                                                     @csrf
                                                     @method('DELETE')

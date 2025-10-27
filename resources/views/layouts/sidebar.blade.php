@@ -37,7 +37,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('keuangan') }}" class="waves-effect">
+                    <a href="{{ route('keuangan.keuangan') }}" class="waves-effect">
                         <i class="mdi mdi-cash "></i>
                         <span key="t-chat" class="text-dark">Keuangan</span>
                     </a>
@@ -50,12 +50,12 @@
                     </a>
                 </li>
 
-                    <li>
+                {{-- <li>
                     <a href="chat.html" class="waves-effect">
                         <i class="bx bx-user-circle"></i>
                         <span key="t-chat" class="text-dark">User</span>
                     </a>
-                </li>
+                </li> --}}
 
                 {{-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
