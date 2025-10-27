@@ -19,11 +19,11 @@ class KeuanganController extends Controller
 
         // Filter berdasarkan bulan & tahun jika dipilih
         if ($bulan && $tahun) {
-            $queryPemasukan->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun);
-            $queryPengeluaran->whereMonth('created_at', $bulan)->whereYear('created_at', $tahun);
+            $queryPemasukan->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+            $queryPengeluaran->whereMonth('tanggal_masuk', $bulan)->whereYear('tanggal_masuk', $tahun);
         } elseif ($tahun) {
-            $queryPemasukan->whereYear('created_at', $tahun);
-            $queryPengeluaran->whereYear('created_at', $tahun);
+            $queryPemasukan->whereYear('tanggal', $tahun);
+            $queryPengeluaran->whereYear('tanggal_masuk', $tahun);
         }
 
         // Hitung total

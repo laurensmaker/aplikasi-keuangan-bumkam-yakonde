@@ -35,48 +35,48 @@ class LaporanController extends Controller
                 break;
 
             case 'keuangan':
-                 $bulan = $request->get('bulan');
-            $tahun = $request->get('tahun');
+                $bulan = $request->get('bulan');
+                $tahun = $request->get('tahun');
 
-            // Query dasar
-            $queryPemasukan = Pelanggan::query();
-            $queryPengeluaran = Pakan::query();
+                // Query dasar
+                $queryPemasukan = Pelanggan::query();
+                $queryPengeluaran = Pakan::query();
 
-            // Filter bulan dan tahun
-            if ($bulan && $tahun) {
-                $queryPemasukan->whereMonth('created_at', $bulan)
-                               ->whereYear('created_at', $tahun);
-                $queryPengeluaran->whereMonth('created_at', $bulan)
-                                 ->whereYear('created_at', $tahun);
-            } elseif ($tahun) {
-                $queryPemasukan->whereYear('created_at', $tahun);
-                $queryPengeluaran->whereYear('created_at', $tahun);
-            }
+                // Filter bulan dan tahun
+                if ($bulan && $tahun) {
+                    $queryPemasukan->whereMonth('tanggal', $bulan)
+                                ->whereYear('tanggal', $tahun);
+                    $queryPengeluaran->whereMonth('tanggal_masuk', $bulan)
+                                    ->whereYear('tanggal_masuk', $tahun);
+                } elseif ($tahun) {
+                    $queryPemasukan->whereYear('tanggal', $tahun);
+                    $queryPengeluaran->whereYear('tanggal_masuk', $tahun);
+                }
 
-            // Hitung total
-            $pemasukan = $queryPemasukan->sum('total_harga');
-            $pengeluaran = $queryPengeluaran->sum('total_harga');
-            $keuntungan = $pemasukan - $pengeluaran;
+                // Hitung total
+                $pemasukan = $queryPemasukan->sum('total_harga');
+                $pengeluaran = $queryPengeluaran->sum('total_harga');
+                $keuntungan = $pemasukan - $pengeluaran;
 
-            // Format nama file sesuai periode
-            $periode = "semua_periode";
-            if ($bulan && $tahun) {
-                $periode = strtolower(DateTime::createFromFormat('!m', $bulan)->format('F')) . '-' . $tahun;
-            } elseif ($tahun) {
-                $periode = 'tahun-' . $tahun;
-            }
+                // Format nama file sesuai periode
+                $periode = "semua_periode";
+                if ($bulan && $tahun) {
+                    $periode = strtolower(DateTime::createFromFormat('!m', $bulan)->format('F')) . '-' . $tahun;
+                } elseif ($tahun) {
+                    $periode = 'tahun-' . $tahun;
+                }
 
-            // Siapkan data untuk view PDF
-            $data = [
-                'pemasukan' => $pemasukan,
-                'pengeluaran' => $pengeluaran,
-                'keuntungan' => $keuntungan,
-                'periode' => $periode,
-            ];
+                // Siapkan data untuk view PDF
+                $data = [
+                    'pemasukan' => $pemasukan,
+                    'pengeluaran' => $pengeluaran,
+                    'keuntungan' => $keuntungan,
+                    'periode' => $periode,
+                ];
 
-            $view = 'laporan.keuangan_pdf';
-            $filename = "laporan_keuangan_{$periode}.pdf";
-            break;
+                $view = 'laporan.keuangan_pdf';
+                $filename = "laporan_keuangan_{$periode}.pdf";
+                break;
 
             default:
                 return redirect()->back()->with('error', 'Jenis laporan tidak ditemukan.');
