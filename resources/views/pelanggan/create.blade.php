@@ -2,6 +2,17 @@
 @section('content')
 <div class="page-content">
     <div class="container-fluid">
+        @if (session('error'))
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Peringatan!',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Tutup'
+                })
+            </script>
+        @endif
 
         <!-- start page title -->
         <div class="row">

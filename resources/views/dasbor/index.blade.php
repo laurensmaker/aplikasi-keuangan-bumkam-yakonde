@@ -54,10 +54,6 @@
                                                 <p class="text-muted mb-0">Produksi Terbaru</p>
                                             </div>
                                             <div class="col-3">
-                                                <h5 class="font-size-13">{{ number_format($produksiTerbaru->jumlah_telur) }}</h5>
-                                                <p class="text-muted mb-0" style="font-size: 11px">Jumlah Telur</p>
-                                            </div>
-                                            <div class="col-3">
                                                 <h5 class="font-size-13">{{ number_format($produksiTerbaru->pakan_digunakan, 0, ',', '.') }} <small>Kg</small></h5>
                                                 <p class="text-muted mb-0" style="font-size: 11px">Pakan </p>
                                             </div>
@@ -135,12 +131,12 @@
                                         @if ($pakanTotal->isEmpty())
                                             <p>Stok Kosong</p>
                                         @else
-                                            <h4 class="mb-0">{{ number_format($pakanTerbaru->stok_sisa, 0, ',', '.') }} Kg</h4>
-                                            @if ($pakanTerbaru->stok_sisa > 50) 
+                                            <h4 class="mb-0">{{ number_format($totalStok, 0, ',', '.') }} Kg</h4>
+                                            @if ($totalStok > 50) 
                                                 <p class="fw-medium text-success">
                                                     <i class="mdi mdi-check-circle-outline"></i> Stok Aman
                                                 </p>
-                                            @elseif ($pakanTerbaru->stok_sisa > 0 && $pakanTerbaru->stok_sisa <= 50)
+                                            @elseif ($totalStok > 0 && $totalStok <= 50)
                                                 <p class="fw-medium text-warning">
                                                     <i class="mdi mdi-alert-circle-outline"></i> Stok Menipis!
                                                 </p>

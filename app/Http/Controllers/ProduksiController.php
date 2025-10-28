@@ -21,49 +21,72 @@ class ProduksiController extends Controller
     }
 
     public function store(Request $request){
-        // dd($request);
+        // 🔹 Validasi input
         $produksi = $request->validate([
             'tanggal_produksi' => 'required|date',
             'kandang_id' => 'required',
-            'jumlah_ayam' => 'required',
-            'jumlah_telur' => 'required',
-            'berat_total' => 'required',
-            'telur_bagus' => 'required',
-            'telur_rusak' => 'required',
-            'pakan_digunakan' => 'required',
+            'jumlah_ayam' => 'required|numeric',
+            'jumlah_telur' => 'required|numeric',
+            'berat_total' => 'required|numeric',
+            'telur_bagus' => 'required|numeric',
+            'telur_rusak' => 'required|numeric',
+            'pakan_digunakan' => 'required|numeric',
+            'nama_pakan' => 'required|string',
         ]);
 
-        // 🔹 Cek stok pakan terakhir
-        $pakanTerbaru = Pakan::where('nama_pakan', $request->nama_pakan)
-            ->latest()
-            ->first();
+        // 🔹 Ambil data pakan dari database
+        $jagung  = Pakan::where('nama_pakan', 'Jagung Giling')->first();
+        $bekatul = Pakan::where('nama_pakan', 'Bekatul (dedak halus)')->first();
+        $sorghum = Pakan::where('nama_pakan', 'Sorghum')->first();
 
-        // if (!$pakanTerbaru) {
-        //     return redirect()->back()->with('error', 'Stok pakan untuk jenis ini belum tersedia.');
-        // }
+        // 🔹 Cek pakan yang digunakan
+        $jenisPakan = $request->nama_pakan;
+        $jumlahDigunakan = $request->pakan_digunakan;
 
-        // 🔹 Ambil stok sisa terakhir
-        $stokSisa = $pakanTerbaru->stok_sisa ?? 0;
-
-        if ($produksi['pakan_digunakan'] > $stokSisa) {
-            return redirect()->back()->with('error', 'Jumlah pakan digunakan melebihi stok tersedia (stok saat ini: ' . $stokSisa . ' Kg).');
+        // 🔹 Tentukan stok sisa berdasarkan jenis pakan
+        $stokSisa = 0;
+        $stokMasuk = 0;
+        if ($jenisPakan === 'Jagung Giling' && $jagung) {
+            $stokSisa = $jagung->stok_sisa;
+            $stokMasuk = $jagung->stok_masuk;
+        } elseif ($jenisPakan === 'Bekatul (dedak halus)' && $bekatul) {
+            $stokSisa = $bekatul->stok_sisa;
+            $stokMasuk = $bekatul->stok_masuk;
+        } elseif ($jenisPakan === 'Sorghum' && $sorghum) {
+            $stokSisa = $sorghum->stok_sisa;
+            $stokMasuk = $sorghum->stok_masuk;
         }
-        
+
+        // 🔹 Cek apakah stok cukup
+        if ($jumlahDigunakan > $stokMasuk) {
+            return redirect()->back()->with('error', 'Jumlah pakan digunakan melebihi stok tersedia (stok saat ini: ' . $stokMasuk . ' Kg).');
+        }
+
+        // 🔹 Simpan data produksi telur
         Produksi::create($produksi);
 
+        // 🔹 Catat stok keluar
         StokKeluar::create([
             'kandang_id' => $request->kandang_id,
-            'nama_pakan' => $request->nama_pakan,
+            'nama_pakan' => $jenisPakan,
             'tanggal_keluar' => $request->tanggal_produksi,
-            'jumlah_keluar' => $request->pakan_digunakan,
+            'jumlah_keluar' => $jumlahDigunakan,
         ]);
 
+        // 🔹 Update stok sisa di database
+        if ($jenisPakan === 'Jagung Giling' && $jagung) {
+            $jagung->update(['stok_sisa' => $stokSisa - $jumlahDigunakan]);
+        } elseif ($jenisPakan === 'Bekatul (dedak halus)' && $bekatul) {
+            $bekatul->update(['stok_sisa' => $stokSisa - $jumlahDigunakan]);
+        } elseif ($jenisPakan === 'Sorghum' && $sorghum) {
+            $sorghum->update(['stok_sisa' => $stokSisa - $jumlahDigunakan]);
+        }
 
-         $pakanTerbaru->update([
-            'stok_sisa' => $stokSisa - $produksi['pakan_digunakan'],
-        ]);
-
-        
+        // 🔹 Hitung total seluruh stok pakan (hanya variabel, tidak disimpan)
+        $totalPakan = 
+            ($jagung->stok_sisa ?? 0) + 
+            ($bekatul->stok_sisa ?? 0) + 
+            ($sorghum->stok_sisa ?? 0);
         
         return redirect()->route('produksi.index')->with('success', 'Data Berhasil disimpan!');
     }

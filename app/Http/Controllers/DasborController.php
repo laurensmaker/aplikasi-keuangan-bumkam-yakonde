@@ -12,7 +12,7 @@ class DasborController extends Controller
     public function dasbor(){
         $produksiTerbaru = Produksi::latest()->first();
         $produksiTotal = Produksi::latest()->get();
-        $pakanTerbaru = Pakan::latest()->first();
+        // $pakanTerbaru = Pakan::latest()->first();
         $pakanTotal = Pakan::latest()->get();
         $totalTelurBagus = Produksi::sum('telur_bagus');
 
@@ -25,7 +25,8 @@ class DasborController extends Controller
         $keuntunganRp = number_format($keuntungan,0,',','.');
 
         $pelangganTerbaru = Pelanggan::latest()->take(3)->get();
+        $totalStok = Pakan::sum('stok_sisa');
 
-        return view('dasbor.index', compact('produksiTerbaru', 'produksiTotal', 'pakanTerbaru', 'pakanTotal', 'totalTelurBagus', 'pemasukanRp', 'pengeluaranRp', 'keuntunganRp', 'pelangganTerbaru'));
+        return view('dasbor.index', compact('produksiTerbaru', 'produksiTotal', 'totalStok', 'pakanTotal', 'totalTelurBagus', 'pemasukanRp', 'pengeluaranRp', 'keuntunganRp', 'pelangganTerbaru'));
     }
 }

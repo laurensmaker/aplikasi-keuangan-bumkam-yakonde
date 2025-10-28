@@ -21,7 +21,7 @@
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                     <a href="{{ route('pelanggan.create') }}" class="btn btn-warning waves-effect waves-light">
-                        <i class="bx bx-plus font-size-16 align-middle me-2"></i> Pelanggang
+                        <i class="bx bx-plus font-size-16 align-middle me-2"></i> Pelanggan
                     </a>
 
                     {{-- <div class="page-title-right">

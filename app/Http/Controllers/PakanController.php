@@ -33,7 +33,7 @@ class PakanController extends Controller
         // $stokKeluarBaru = StokKeluar::latest()->first();
         // $stokSisa = $stok_awal + ($request->stok_masuk ?? 0) - $stokKeluarBaru->jumlah_keluar;
 
-        $stokSisa = $stok_awal + ($request->stok_masuk ?? 0);
+        // $stokSisa = $stok_awal + ($request->stok_masuk ?? 0);
         
         Pakan::create([
             'nama_pakan' => $request->nama_pakan,
@@ -41,7 +41,7 @@ class PakanController extends Controller
             'stok_masuk' => $request->stok_masuk ?? 0,
             'harga_per_kg' => $request->harga_per_kg ?? 0,
             'tanggal_masuk' => $request->tanggal_masuk,
-            'stok_sisa' => $stokSisa
+            'stok_sisa' => $request->stok_masuk
         ]);
 
         
