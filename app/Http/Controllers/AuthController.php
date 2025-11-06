@@ -25,7 +25,7 @@ class AuthController extends Controller
         // Proses autentikasi
         if (Auth::attempt($request->only('email', 'password'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/')->with('success', 'Login berhasil!');
+            return redirect()->intended('/dasbor')->with('success', 'Login berhasil!');
         }
 
         return back()->withErrors([
@@ -43,6 +43,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login')->with('success', 'Anda telah logout.');
+        return redirect('/')->with('success', 'Anda telah logout.');
     }
 }
